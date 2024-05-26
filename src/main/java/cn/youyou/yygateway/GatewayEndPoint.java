@@ -15,25 +15,25 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Component
 public class GatewayEndPoint {
 
-    @Autowired
-    HelloHandler helloHandler;
-
-    @Autowired
-    GatewayHandler gatewayHandler;
-
-    /**
-     * 基于RouterFunction实现网关的入口
-     * @return
-     */
-    @Bean
-    public RouterFunction<?> helloRouterFunction() {
-        return route(GET("/hello"), helloHandler);
-    }
-
-    @Bean
-    public RouterFunction<?> gatewayRouterFunction() {
-        return route(GET("/gw").or(POST("/gw/**")), gatewayHandler);
-    }
+//    @Autowired
+//    HelloHandler helloHandler;
+//
+//    @Autowired
+//    GatewayHandler gatewayHandler;
+//
+//    /**
+//     * 基于RouterFunction实现网关的入口
+//     * @return
+//     */
+//    @Bean
+//    public RouterFunction<?> helloRouterFunction() {
+//        return route(GET("/hello"), helloHandler);
+//    }
+//
+//    @Bean
+//    public RouterFunction<?> gatewayRouterFunction() {
+//        return route(GET("/gw").or(POST("/gw/**")), gatewayHandler);
+//    }
 
 
 }
