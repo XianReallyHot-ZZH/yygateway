@@ -1,2 +1,15 @@
 ### GET hello
 GET http://localhost:8888/hello
+
+### GET gw 1
+GET http://localhost:8888/gw
+
+### POST user
+POST http://localhost:8888/gw/cn.youyou.yyrpc.demo.api.UserService
+Content-Type: application/json
+
+{
+  "service":"cn.youyou.yyrpc.demo.api.UserService",
+  "methodSign":"findById@1_int",
+  "args":[100]
+}

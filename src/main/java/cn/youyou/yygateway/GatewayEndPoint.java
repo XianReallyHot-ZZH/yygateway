@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 /**
@@ -17,6 +18,9 @@ public class GatewayEndPoint {
     @Autowired
     HelloHandler helloHandler;
 
+    @Autowired
+    GatewayHandler gatewayHandler;
+
     /**
      * 基于RouterFunction实现网关的入口
      * @return
@@ -24,6 +28,11 @@ public class GatewayEndPoint {
     @Bean
     public RouterFunction<?> helloRouterFunction() {
         return route(GET("/hello"), helloHandler);
+    }
+
+    @Bean
+    public RouterFunction<?> gatewayRouterFunction() {
+        return route(GET("/gw").or(POST("/gw/**")), gatewayHandler);
     }
 
 
