@@ -1,4 +1,4 @@
-package cn.youyou.yygateway;
+package cn.youyou.yygateway.web.handlerfunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 /**
- * 网关的入口
+ * 基于HandlerFunction+RouterFunction机制实现的网关的入口
  */
 @Component
 public class GatewayEndPoint {

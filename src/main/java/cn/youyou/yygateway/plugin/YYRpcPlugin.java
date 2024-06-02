@@ -1,25 +1,34 @@
-package cn.youyou.yygateway;
+package cn.youyou.yygateway.plugin;
 
+import cn.youyou.yygateway.chain.GatewayPluginChain;
 import cn.youyou.yyrpc.core.api.LoadBalancer;
 import cn.youyou.yyrpc.core.api.RegistryCenter;
 import cn.youyou.yyrpc.core.cluster.RoundRibonLoadBalancer;
 import cn.youyou.yyrpc.core.meta.InstanceMeta;
 import cn.youyou.yyrpc.core.meta.ServiceMeta;
-import com.fasterxml.jackson.databind.node.TextNode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebHandler;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-@Component("gatewayWebHandler")
-public class GatewayWebHandler implements WebHandler {
+/**
+ * 负责对接调用使用YYRpc实现对外提供服务的provider的对应服务
+ */
+@Slf4j
+@Component("yyrpc")
+public class YYRpcPlugin extends AbstractGatewayPlugin {
+
+    public static final String NAME = "yyrpc";
+
+    // 网关请求的路径前缀
+    private String prefix = GATEWAY_PREFIX + "/" + NAME + "/";
 
     @Autowired
     RegistryCenter rc;
@@ -27,11 +36,16 @@ public class GatewayWebHandler implements WebHandler {
     LoadBalancer<InstanceMeta> loadBalancer = new RoundRibonLoadBalancer<>();
 
     @Override
-    public Mono<Void> handle(ServerWebExchange exchange) {
-        System.out.println("===>>>> YY Gateway web handler ...");
+    public boolean doSupport(ServerWebExchange exchange) {
+        return exchange.getRequest().getPath().value().startsWith(prefix);
+    }
+
+    @Override
+    public Mono<Void> doHandle(ServerWebExchange exchange, GatewayPluginChain chain) {
+        log.info("======>>>>>> [YYRpc-Plugin] ...");
 
         // 1. 通过请求路径获取服务名
-        String service = exchange.getRequest().getPath().value().substring(4);
+        String service = exchange.getRequest().getPath().value().substring(prefix.length());
         ServiceMeta serviceMeta = ServiceMeta.builder()
                 .name(service).app("app1").env("dev").namespace("public")
                 .build();
@@ -39,7 +53,7 @@ public class GatewayWebHandler implements WebHandler {
         List<InstanceMeta> instanceMetas = rc.fetchAll(serviceMeta);
         // 3. 负载均衡，先简化处理，或者第一个实例url
         InstanceMeta instanceMeta = loadBalancer.choose(instanceMetas);
-        System.out.println(" inst size=" + instanceMetas.size() +  ", inst  " + instanceMeta);
+        log.info(" inst size={}, inst={}", instanceMetas.size(), instanceMeta);
         String url = instanceMeta.toUrl();
 
         // 4. 拿到请求的报文
@@ -55,7 +69,15 @@ public class GatewayWebHandler implements WebHandler {
         // 7. 组装响应报文
         exchange.getResponse().getHeaders().add("Content-Type", "application/json");
         exchange.getResponse().getHeaders().add("yy.gw.version", "v1.0.0");
+        exchange.getResponse().getHeaders().add("yy.gw.plugin", getName());
+        // 8. 处理完自己的具体实现后，调用chain的handle方式，进而调用其链路上的下一个插件
         return resBody.flatMap(body -> exchange.getResponse()
-                .writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap(body.getBytes()))));
+                .writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap(body.getBytes()))))
+                .then(chain.handle(exchange));
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

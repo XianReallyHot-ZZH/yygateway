@@ -1,4 +1,4 @@
-package cn.youyou.yygateway;
+package cn.youyou.yygateway.web.handlerfunction;
 
 import cn.youyou.yyrpc.core.api.LoadBalancer;
 import cn.youyou.yyrpc.core.api.RegistryCenter;
@@ -17,6 +17,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * 基于HandlerFunction机制实现的结合RPC服务调用的demo
+ */
 @Component
 public class GatewayHandler implements HandlerFunction<ServerResponse> {
 

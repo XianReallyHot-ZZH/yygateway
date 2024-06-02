@@ -11,6 +11,8 @@ import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 
 import java.util.Properties;
 
+import static cn.youyou.yygateway.plugin.GatewayPlugin.GATEWAY_PREFIX;
+
 @Configuration
 public class GatewayConfig {
 
@@ -31,7 +33,7 @@ public class GatewayConfig {
             SimpleUrlHandlerMapping handlerMapping = context.getBean(SimpleUrlHandlerMapping.class);
             // 增加映射关系
             Properties mappings = new Properties();
-            mappings.put("/gw/**", "gatewayWebHandler");
+            mappings.put(GATEWAY_PREFIX + "/**", "gatewayWebHandler");
             handlerMapping.setMappings(mappings);
             handlerMapping.initApplicationContext();
             System.out.println("yyrpc gateway start");

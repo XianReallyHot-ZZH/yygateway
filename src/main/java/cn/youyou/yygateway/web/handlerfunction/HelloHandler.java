@@ -1,4 +1,4 @@
-package cn.youyou.yygateway;
+package cn.youyou.yygateway.web.handlerfunction;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 /**
- * 简单demo
+ * 基于HandlerFunction机制实现的简单demo
  */
 @Component
 public class HelloHandler implements HandlerFunction<ServerResponse> {
