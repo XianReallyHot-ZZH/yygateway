@@ -13,3 +13,23 @@ Content-Type: application/json
   "methodSign":"findById@1_int",
   "args":[100]
 }
+
+### POST direct
+POST http://localhost:8888/gw/direct/cn.youyou.yyrpc.demo.api.UserService
+Content-Type: application/json
+
+{
+  "service":"cn.youyou.yyrpc.demo.api.UserService",
+  "methodSign":"findById@1_int",
+  "args":[100]
+}
+
+### POST direct backend
+POST http://localhost:8888/gw/direct/cn.youyou.yyrpc.demo.api.UserService?backend=http://localhost:8081/yyrpc
+Content-Type: application/json
+
+{
+  "service":"cn.youyou.yyrpc.demo.api.UserService",
+  "methodSign":"findById@1_int",
+  "args":[100]
+}

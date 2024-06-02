@@ -22,7 +22,7 @@ import java.util.List;
  * 负责对接调用使用YYRpc实现对外提供服务的provider的对应服务
  */
 @Slf4j
-@Component("yyrpc")
+@Component("yyrpcPlugin")
 public class YYRpcPlugin extends AbstractGatewayPlugin {
 
     public static final String NAME = "yyrpc";
