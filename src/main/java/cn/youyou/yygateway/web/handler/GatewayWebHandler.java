@@ -1,6 +1,7 @@
 package cn.youyou.yygateway.web.handler;
 
 import cn.youyou.yygateway.chain.DefaultGatewayPluginChain;
+import cn.youyou.yygateway.filter.GatewayFilter;
 import cn.youyou.yygateway.plugin.GatewayPlugin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class GatewayWebHandler implements WebHandler {
     @Autowired
     List<GatewayPlugin> plugins;
 
+    @Autowired
+    List<GatewayFilter> filters;
+
     @Override
     public Mono<Void> handle(ServerWebExchange exchange) {
         log.info("===>>>> YY Gateway web handler ...");
@@ -30,6 +34,11 @@ public class GatewayWebHandler implements WebHandler {
                     {"result": "no plugin"}
                     """;
             return exchange.getResponse().writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap(mock.getBytes())));
+        }
+
+        // 组定义filter的处理点
+        for (GatewayFilter filter : filters) {
+            filter.filter(exchange);
         }
 
         // 插件链调用

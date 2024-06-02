@@ -31,7 +31,7 @@ public class DirectPlugin extends AbstractGatewayPlugin{
 
     @Override
     public Mono<Void> doHandle(ServerWebExchange exchange, GatewayPluginChain chain) {
-        log.info("======>>>>>> [YYRpc-Plugin] ...");
+        log.info("======>>>>>> [Direct-Plugin] ...");
 
         // 根据输入的请求参数，获取后端服务地址
         String backend = exchange.getRequest().getQueryParams().getFirst("backend");
