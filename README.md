@@ -9,5 +9,8 @@
 
 ## 当前进展
 
-* 基于RouterFunction实现的网关请求转发
-* 基于WebHandler和HandlerMapping实现的网关请求转发
+* 基于RouterFunction实现的网关请求接入点
+* 基于WebHandler和HandlerMapping实现的网关请求接入点
+* plugin,pluginChain整体方案设计与实现（参考shenyu）
+* 实现了两个plugin：YYRpcPlugin和DirectPlugin
+* 自定义filter的整体方案设计与实现
